@@ -1,6 +1,6 @@
 import time
 import pandas as pd
-import numpy as np
+
 
 
 CITY_DATA = { 'chicago': 'chicago.csv',
@@ -167,49 +167,53 @@ def user_stats(df):
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('='*50)
+def display_raw_data(df):
+    """Displays raw data 5 rows at a time upon user request."""
+    enter = ['yes', 'no']
+    user_input = input('\nWould you like to see the raw data? (Enter: Yes/No).\n').lower()
+    while user_input not in enter:
+        user_input = input('Please Enter Yes or No:\n').lower()
 
+    n = 0
+    while user_input == 'yes':
+        # Print the next 5 rows
+        print(df.iloc[n : n + 5])
+        n += 5
+
+        # Check whether all the data has been shown BEFORE asking again
+        if n >= len(df):
+            print('\nYou have reached the end of the data.')
+            break
+
+        # Data still remains, so ask whether to continue
+        user_input = input('\nWould you like to see more data? (Enter: Yes/No).\n').lower()
+        while user_input not in enter:
+            user_input = input('Please Enter Yes or No:\n').lower()
 
 def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
+        if df.empty:
+            print('\nThere is no data for the filters you selected '
+                  '(city: {}, month: {}, day: {}).'.format(city, month, day))
+            print('Please try a different combination.')
+            print('='*50)
+        else:
+            time_stats(df)
+            station_stats(df)
+            trip_duration_stats(df)
+            user_stats(df)
+            display_raw_data(df) 
 
-        time_stats(df)
-        station_stats(df)
-        trip_duration_stats(df)
-        user_stats(df)
-
-        # To prompt the user whether they would like to see the raw data
-        enter = ['yes','no']
-        user_input = input('Would you like to see more data? (Enter:Yes/No).\n')
-
-        while user_input.lower() not in enter:
-            user_input = input('Please Enter Yes or No:\n')
-            user_input = user_input.lower()
-        n = 0
-        while True :
-            if user_input.lower() == 'yes':
-                if n >= len(df):
-                    print('\nNo more data to display.')
-                    break
-                print(df.iloc[n : n + 5])
-                n += 5
-                user_input = input('\nWould you like to see more data? (Type:Yes/No).\n')
-                while user_input.lower() not in enter:
-                    user_input = input('Please Enter Yes or No:\n')
-                    user_input = user_input.lower()
-            else:
-                break
-
-        restart = input('\nWould you like to restart? (Enter:Yes/No).\n')
-        # check whether the user is entering a valid entry or not
-        while restart.lower() not in enter:
-            restart = input('Please Enter Yes or No:\n')
-            restart = restart.lower()
-        if restart.lower() != 'yes':
+            # To prompt the user whether they would like to see the raw data
+        enter = ['yes', 'no']
+        restart = input('\nWould you like to restart? (Enter: Yes/No).\n').lower()
+        while restart not in enter:
+            restart = input('Please Enter Yes or No:\n').lower()
+        if restart != 'yes':
             print('BYE!')
             break
-
 
 if __name__ == "__main__":
 	main()
