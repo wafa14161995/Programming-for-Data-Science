@@ -1,3 +1,4 @@
+# BikeShare data exploration script — Udacity Programming for Data Science
 import time
 import pandas as pd
 
