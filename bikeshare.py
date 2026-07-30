@@ -1,7 +1,6 @@
 # BikeShare data exploration script — Udacity Programming for Data Science
 import time
-import pandas as pd
-
+import pandas as pd  # data analysis library
 
 
 CITY_DATA = { 'chicago': 'chicago.csv',
@@ -57,7 +56,7 @@ def load_data(city, month, day):
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
     """
-    # Loading data file into a dataframe.
+    # Load the selected city CSV into a pandas DataFrame
     df = pd.read_csv(CITY_DATA[city])
 
     # Converting the Start Time column to datetime
@@ -90,7 +89,7 @@ def time_stats(df):
     print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
 
-    # display the most common month
+    # Find and display the most common month of travel
     df['month'] = df['Start Time'].dt.month
     popular_month = df['month'].mode()[0]
     months = ['January', 'February', 'March', 'April', 'May', 'June']
